@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadoras de Enfermagem</title>
+    <!-- Carrega o Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Carrega a biblioteca de ícones Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Estilos personalizados (do GlobalStyle) -->
+    <style>
+        @keyframes subtleGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-bg {
+            background: linear-gradient(-45deg, #f8fafc, #f1f5f9, #f8fafc, #f1f5f9);
+            background-size: 400% 400%;
+            animation: subtleGradient 25s ease infinite;
+        }
+        
+        /* Adiciona um estilo básico para o select nativo se parecer com o shadcn */
+        .native-select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1.25em 1.25em;
+            padding-right: 2.5rem; /* Espaço para o ícone */
+        }
+    </style>
+</head>
+<body class="animated-bg text-gray-800">
+
+    <!-- Container principal da aplicação -->
+    <div id="app" class="p-6 md:p-8 max-w-7xl mx-auto">
+        
+        <!-- Cabeçalho -->
+        <div class="mb-8 flex flex-col items-center text-center bg-white p-6 md:p-8 rounded-2xl shadow-sm">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[#1A3E74] mb-3">
+                Calculadoras de Enfermagem
+            </h1>
+            <p class="text-lg text-gray-600 max-w-4xl">
+                Ferramentas essenciais para profissionais e estudantes de enfermagem, oferecendo calculadoras de escalas clínicas e de dosagem de medicamentos para otimizar a prática diária e a segurança do paciente.
+            </p>
+        </div>
+
+        <!-- Seção de Acesso Rápido -->
+        <div class="mb-8 bg-white p-6 md:p-8 rounded-2xl shadow-sm">
+            <h2 class="text-3xl font-bold text-[#1A3E74] mb-6 pb-3 border-b-4 border-[#1A3E74] inline-block">
+                Acesso Rápido
+            </h2>
+            <!-- Conteúdo do Acesso Rápido será injetado aqui -->
+            <div id="quick-access-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <!-- Exemplo de Card de Acesso Rápido (será gerado por JS) -->
+                <!-- 
+                <a href="#" class="group">
+                    <div class="aspect-square hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-[#1A3E74] overflow-hidden bg-white rounded-2xl">
+                        <div class="p-5 flex flex-col items-center justify-center text-center h-full">
+                            <div class="p-3 bg-[#1A3E74]/10 rounded-lg mb-3">
+                                <i data-lucide="calculator" class="w-8 h-8 text-[#1A3E74]"></i>
+                            </div>
+                            <p class="text-lg font-bold text-[#1A3E74]">Calculadoras</p>
+                        </div>
+                    </div>
+                </a> 
+                -->
+            </div>
+        </div>
+
+        <!-- Barra de busca centralizada com botões - AGORA EM UM CARD (NOVA SEÇÃO) -->
+        <div class="mb-8 flex flex-col justify-center bg-white p-6 md:p-8 rounded-2xl shadow-sm">
+            <!-- TÍTULO ADICIONADO -->
+            <h3 class="text-2xl font-bold text-[#1A3E74] text-center mb-6">
+              Busque suas ferramentas
+            </h3>
+            <!-- Container flexível para os botões e input -->
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full max-w-2xl mx-auto">
+                <!-- Input de busca -->
+                <div class="relative flex-grow w-full">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i data-lucide="search" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        placeholder="Buscar em todas as ferramentas..."
+                        class="w-full h-[60px] pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-[#1A3E74] focus:border-transparent"
+                    />
+                </div>
+                <!-- Container para os botões -->
+                <div class="flex gap-3 w-full sm:w-auto">
+                    <button 
+                        type="button"
+                        id="search-button"
+                        class="flex-1 sm:flex-none px-6 py-3 h-[60px] bg-[#1A3E74] text-white rounded-xl font-semibold shadow-sm hover:bg-[#15325e] transition-colors text-lg w-full sm:w-[140px] flex justify-center items-center" 
+                    >
+                        Buscar
+                    </button>
+                    <button 
+                        type="button"
+                        id="clear-button"
+                        class="flex-1 sm:flex-none px-4 py-3 h-[60px] bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors flex justify-center items-center w-full sm:w-[140px]" 
+                        title="Limpar busca"
+                    >
+                        <i data-lucide="refresh-ccw" class="w-5 h-5 mr-2"></i>
+                        Limpar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção Principal de Ferramentas (Filtros, Listas) -->
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm">
+            
+            <!-- Controles (Ordenação e Visualização) -->
+            <div id="controls-container" class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+                <!-- Conteúdo dos Controles será injetado aqui -->
+            </div>
+
+            <!-- Seção de Calculadoras -->
+            <div id="calculators-section" class="mb-12">
+                <h2 id="calculators-header" class="text-3xl font-bold text-[#1A3E74] mb-6 pb-3 border-b-4 border-[#1A3E74] inline-block" data-anchor-id="calculadoras">
+                    Calculadoras
+                </h2>
+                <div id="calculators-container">
+                    <!-- Cards de Calculadoras serão injetados aqui -->
+                </div>
+            </div>
+
+            <!-- Seção de Escalas Clínicas -->
+            <div id="scales-section" class="mb-12">
+                <h2 id="scales-header" class="text-3xl font-bold text-[#1A3E74] mb-6 pb-3 border-b-4 border-[#1A3E74] inline-block" data-anchor-id="escalas">
+                    Escalas Clínicas
+                </h2>
+                <div id="scales-container">
+                    <!-- Cards de Escalas serão injetados aqui -->
+                </div>
+            </div>
+
+            <!-- Seção de Vacinas -->
+            <div id="vaccines-section" class="mb-12">
+                <h2 id="vaccines-header" class="text-3xl font-bold text-[#1A3E74] mb-6 pb-3 border-b-4 border-[#1A3E74] inline-block" data-anchor-id="vacinas">
+                    Consultar Vacinas
+                </h2>
+                <div id="vaccines-container">
+                    <!-- Cards de Vacinas serão injetados aqui -->
+                </div>
+            </div>
+
+            <!-- Mensagem de "Nenhum resultado" -->
+            <div id="no-results" class="hidden text-center text-gray-600 text-lg py-12">
+                <i data-lucide="alert-circle" class="w-12 h-12 mx-auto mb-4 text-gray-400"></i>
+                Nenhuma ferramenta encontrada com os termos buscados.
+            </div>
+
+        </div>
+
+    </div> <!-- Fim do #app -->
+
+
+    <!-- ============================================= -->
+    <!-- SCRIPT PRINCIPAL DA APLICAÇÃO                 -->
+    <!-- ============================================= -->
+    <script type="module">
+        // --- DADOS DA APLICAÇÃO ---
+        // (Convertendo os ícones JSX para strings 'iconName')
+
+        const TOOLS_DATA = [
+            { id: 'balanco-hidrico', name: 'Balanço Hídrico', category: 'Controle Hídrico', type: 'calculator', description: 'Controle preciso de líquidos', created_at: '2023-10-01T10:00:00Z', iconName: 'droplet' },
+            { id: 'gotejamento', name: 'Cálculo de Gotejamento', category: 'Medicamentos', type: 'calculator', description: 'Velocidade de infusão de solução Fisiológica', created_at: '2023-10-02T10:00:00Z', iconName: 'gauge' },
+            { id: 'aspiracao-heparina', name: 'Cálculo de Heparina', category: 'Medicamentos', type: 'calculator', description: 'Cálculo de aspiração de Insulina', created_at: '2023-10-03T10:00:00Z', iconName: 'syringe' },
+            { id: 'imc', name: 'Cálculo de Índice Massa Corporal (IMC)', category: 'Nutrição', type: 'calculator', description: 'Índice de Massa Corporal', created_at: '2023-10-04T10:00:00Z', iconName: 'scale' },
+            { id: 'aspiracao-insulina', name: 'Cálculo de Insulina', category: 'Medicamentos', type: 'calculator', description: 'Cálculo de doses de insulina', created_at: '2023-10-05T10:00:00Z', iconName: 'syringe' },
+            { id: 'medicamentos', name: 'Cálculo de Medicamentos', category: 'Medicamentos', type: 'calculator', description: 'Doses e diluições de fármacos', created_at: '2023-10-06T10:00:00Z', iconName: 'pill' },
+            { id: 'dimensionamento', name: 'Dimensionamento de Equipe', category: 'Gestão', type: 'calculator', description: 'Organize sua equipe de enfermagem', created_at: '2023-10-07T10:00:00Z', iconName: 'users' },
+            { id: 'idade-gestacional', name: 'Idade Gestacional e DPP', category: 'Obstetrícia', type: 'calculator', description: 'Calcule a idade gestacional e Data provável do parto', created_at: '2023-10-08T10:00:00Z', iconName: 'baby' },
+
+            { id: 'aldrete-e-kroulik', name: 'Escala de Aldrete e Kroulik', category: 'Sedação', type: 'scale', description: 'Avaliação do paciente em SRPA', created_at: '2023-10-09T10:00:00Z', iconName: 'clipboard-list' },
+            { id: 'apache-ii', name: 'Escala de APACHE II', category: 'UTI', type: 'scale', description: 'Avaliação de gravidade do paciente em estado grave', created_at: '2023-10-10T10:00:00Z', iconName: 'scroll-text' },
+            { id: 'apgar', name: 'Escala de Apgar', category: 'Neonatalogia', type: 'scale', description: 'Avaliação de recém-nascidos', created_at: '2023-10-11T10:00:00Z', iconName: 'baby' },
+            { id: 'asa', name: 'Risco Perioperatório - ASA', category: 'Anestesia', type: 'scale', description: 'Classificação do estado físico pré operatório', created_at: '2023-10-12T10:00:00Z', iconName: 'clipboard-list' },
+            { id: 'ballard', name: 'Escala de Ballard', category: 'Neonatalogia', type: 'scale', description: 'Avaliação da maturidade neuromuscular e física do recém-nascido', created_at: '2023-10-13T10:00:00Z', iconName: 'baby' },
+            { id: 'barthel', name: 'Escala de Barthel', category: 'Funcional', type: 'scale', description: 'Avalia grau de dependência funcional do paciente', created_at: '2023-10-14T10:00:00Z', iconName: 'person-standing' },
+            { id: 'bps', name: 'Escala de dor de Behavioural (BPS)', category: 'Dor', type: 'scale', description: 'Avaliação de dor em pacientes sob ventilação mecânica', created_at: '2023-10-15T10:00:00Z', iconName: 'smile' },
+            { id: 'berg', name: 'Escala de BERG (BBS)', category: 'Fisioterapia', type: 'scale', description: 'Avalia o equilíbrio estático e dinâmico de um paciente', created_at: '2023-10-16T10:00:00Z', iconName: 'person-standing' },
+            { id: 'bishop', name: 'Índice de Bishop', category: 'Obstetrícia', type: 'scale', description: 'Avaliar a maturidade do colo do útero e a prontidão para o trabalho de parto', created_at: '2023-10-17T10:00:00Z', iconName: 'stethoscope' },
+            { id: 'braden', name: 'Escala de Braden', category: 'Pele', type: 'scale', description: 'Risco de lesão por pressão', created_at: '2023-10-18T10:00:00Z', iconName: 'bed' },
+            { id: 'cam-icu', name: 'Escala CAM-ICU', category: 'UTI', type: 'scale', description: 'Avaliação de delirium em UTI', created_at: '2023-10-19T10:00:00Z', iconName: 'building' },
+            { id: 'capurro', name: 'Método de Capurro', category: 'Neonatalogia', type: 'scale', description: 'Método para estimar a idade gestacional de de RN\'s', created_at: '2023-10-20T10:00:00Z', iconName: 'baby' },
+            { id: 'cincinnati', name: 'Escala de Cincinnati', category: 'AVC', type: 'scale', description: 'Avaliação de AVE', created_at: '2023-10-21T10:00:00Z', iconName: 'user-check' },
+            { id: 'cornell', name: 'Escala de Cornell', category: 'Psiquiatria', type: 'scale', description: 'Classificação de depressão em paciente com demência', created_at: '2023-10-22T10:00:00Z', iconName: 'clipboard-list' },
+            { id: 'cries', name: 'Escala de CRIES', category: 'Dor', type: 'scale', description: 'Avaliação de dor dos recém-nascidos', created_at: '2023-10-23T10:00:00Z', iconName: 'user-round' },
+            { id: 'curb-65', name: 'Escala de CURB-65', category: 'Pneumologia', type: 'scale', description: 'Avaliação de Gravidade em Pneumonia Adquirida na Comunidade', created_at: '2023-10-24T10:00:00Z', iconName: 'activity' },
+            { id: 'downton', name: 'Escala de Downton', category: 'Segurança', type: 'scale', description: 'Avalia o risco de queda em pacientes idosos', created_at: '2023-11-01T10:00:00Z', iconName: 'shower-head' },
+            { id: 'elpo', name: 'Escala de ELPO', category: 'Pele', type: 'scale', description: 'Avaliação lesão por pressão em bloco operatório', created_at: '2023-11-02T10:00:00Z', iconName: 'user-round' },
+            { id: 'fast', name: 'Escala de FAST', category: 'AVC', type: 'scale', description: 'Avaliação de risco de AVE', created_at: '2023-11-03T10:00:00Z', iconName: 'person-standing' },
+            { id: 'flacc', name: 'Escala de FLACC', category: 'Dor', type: 'scale', description: 'Avaliação de dor em crianças não verbal', created_at: '2023-11-04T10:00:00Z', iconName: 'user-round' },
+            { id: 'four', name: 'Escala de FOUR', category: 'Neurologia', type: 'scale', description: 'Avaliação neurológica', created_at: '2023-11-05T10:00:00Z', iconName: 'stethoscope' },
+            { id: 'fugulin-scp', name: 'Escala de Fugulin (SCP)', category: 'Gestão', type: 'scale', description: 'Avaliação do grau de Complexidade do paciente.', created_at: '2023-11-06T10:00:00Z', iconName: 'users-round' },
+            { id: 'gds', name: 'Escala de GDS', category: 'Geriatria', type: 'scale', description: 'Depressão do paciente geriátrico', created_at: '2023-11-07T10:00:00Z', iconName: 'user-round' },
+            { id: 'glasgow', name: 'Escala de coma de Glasgow', category: 'Neurologia', type: 'scale', description: 'Nível de consciência', created_at: '2023-11-08T10:00:00Z', iconName: 'eye' },
+            { id: 'gosnell', name: 'Escala de Gosnell', category: 'Pele', type: 'scale', description: 'Risco de lesão por pressão', created_at: '2023-11-09T10:00:00Z', iconName: 'scale' },
+            { id: 'hamilton', name: 'Escala de Hamilton', category: 'Psiquiatria', type: 'scale', description: 'Avalia gravidade dos sintomas de Ansiedade', created_at: '2023-11-10T10:00:00Z', iconName: 'clipboard-list' },
+            { id: 'humpty-dumpty', name: 'Escala de Humpty - Dumpty', category: 'Segurança', type: 'scale', description: 'Risco de quedas em pacientes pediátricos', created_at: '2023-11-11T10:00:00Z', iconName: 'clipboard-list' },
+            { id: 'johns', name: 'Escala de Johns', category: 'Segurança', type: 'scale', description: 'Avalia risco de queda', created_at: '2023-11-12T10:00:00Z', iconName: 'person-standing' },
+            { id: 'jouvet', name: 'Escala de Jouvet', category: 'Neurologia', type: 'scale', description: 'Escala de coma/consciência', created_at: '2023-11-13T10:00:00Z', iconName: 'bed' },
+            { id: 'katz', name: 'Escala de Katz', category: 'Funcional', type: 'scale', description: 'Avaliação de autonomia nas ABVDs', created_at: '2023-11-14T10:00:00Z', iconName: 'bath' },
+            { id: 'lachs', name: 'Escala de Lachs', category: 'Funcional', type: 'scale', description: 'Avaliação da capacidade funcional do idoso', created_at: '2023-11-15T10:00:00Z', iconName: 'person-standing' },
+            { id: 'lanss', name: 'Escala de LANSS', category: 'Dor', type: 'scale', description: 'Avaliação de dor neuropática', created_at: '2023-11-16T10:00:00Z', iconName: 'stethoscope' },
+            { id: 'lawton', name: 'Escala de Lawton', category: 'Funcional', type: 'scale', description: 'Mede o grau de independência nas AIVD em idosos', created_at: '2023-11-17T10:00:00Z', iconName: 'coffee' },
+            { id: 'manchester', name: 'Escala de Manchester', category: 'Triagem', type: 'scale', description: 'Prioridade de atendimento do paciente em Unidades de pronto atendimento', created_at: '2023-11-18T10:00:00Z', iconName: 'hospital' },
+            { id: 'meem', name: 'Escala de MEEM', category: 'Cognitivo', type: 'scale', description: 'Rastreio cognitivo de déficits', created_at: '2023-11-19T10:00:00Z', iconName: 'accessibility' },
+            { id: 'meows', name: 'Escala de MEOWS', category: 'Obstetrícia', type: 'scale', description: 'Escore de alerta obstétrico precoce/ Avalia Deterioração clínica', created_at: '2023-11-20T10:00:00Z', iconName: 'file-heart' },
+            { id: 'morse', name: 'Escala de Morse', category: 'Segurança', type: 'scale', description: 'Risco de quedas', created_at: '2023-11-21T10:00:00Z', iconName: 'person-standing' },
+            { id: 'news', name: 'Escala de NEWS', category: 'Alerta Clínico', type: 'scale', description: 'Escore de alerta precoce adulto/ Avalia Deterioração clínica', created_at: '2023-11-22T10:00:00Z', iconName: 'line-chart' },
+            { id: 'nihss', name: 'Escala NIHSS', category: 'AVC', type: 'scale', description: 'Avaliação de AVE', created_at: '2023-11-23T10:00:00Z', iconName: 'brain' },
+            { id: 'nips', name: 'Escala de NIPS', category: 'Dor', type: 'scale', description: 'Ferramenta para avaliar a dor em recém-nascidos', created_at: '2023-11-24T10:00:00Z', iconName: 'beaker' },
+            { id: 'norton', name: 'Escala de Norton', category: 'Pele', type: 'scale', description: 'Risco de lesão por pressão', created_at: '2023-11-25T10:00:00Z', iconName: 'clipboard-list' },
+            { id: 'numerica-dor', name: 'Escala Numérica de Dor', category: 'Dor', type: 'scale', description: 'Escala de dor numérica', created_at: '2023-11-26T10:00:00Z', iconName: 'building' },
+            { id: 'ofras', name: 'Escala de OFRAS', category: 'Segurança', type: 'scale', description: 'Risco de quedas em pacientes obstétricas', created_at: '2023-11-27T10:00:00Z', iconName: 'plus-square' },
+            { id: 'painad', name: 'Escala de PAINAD', category: 'Dor', type: 'scale', description: 'Avaliação da Dor em Demência Avançada', created_at: '2023-11-28T10:00:00Z', iconName: 'hand-heart' },
+            { id: 'pelod', name: 'Escala de PELOD', category: 'Pediatria', type: 'scale', description: 'Gravidade e risco precoce em crianças na UTIP', created_at: '2023-11-29T10:00:00Z', iconName: 'message-square-plus' },
+            { id: 'perroca-scp', name: 'Classificação de paciente Perroca (SCP)', category: 'Gestão', type: 'scale', description: 'Classificação do paciente segundo suas complexidades.', created_at: '2023-11-30T10:00:00Z', iconName: 'users-round' },
+            { id: 'pews', name: 'Escala de PEWS', category: 'Alerta Clínico', type: 'scale', description: 'Alerta clínico precoce pediátrico/ Avalia Deterioração clínica', created_at: '2023-12-01T10:00:00Z', iconName: 'alert-triangle' },
+            { id: 'prism', name: 'Escala PRISM', category: 'Pediatria', type: 'scale', description: 'Risco de mortalidade em UTIP', created_at: '2023-12-02T10:00:00Z', iconName: 'activity' },
+            { id: 'qsofa', name: 'Escala qSOFA', category: 'Alerta Clínico', type: 'scale', description: 'Triagem rápida para sepse', created_at: '2023-12-03T10:00:00Z', iconName: 'activity' },
+            { id: 'rancho-los-amigos', name: 'Escala de Rancho Los Amigos', category: 'Neurologia', type: 'scale', description: 'Padrões cognitivos e comportamentais de pacientes com lesão cerebral', created_at: '2023-12-04T10:00:00Z', iconName: 'stethoscope' },
+            { id: 'richmond', name: 'Escala de Richmond (RASS)', category: 'Sedação', type: 'scale', description: 'Sedação e agitação', created_at: '2023-12-05T10:00:00Z', iconName: 'stethoscope' },
+            { id: 'saps-iii', name: 'Escala de SAPS III', category: 'UTI', type: 'scale', description: 'Porcentagem de Índice de mortalidade em UTI', created_at: '2023-12-06T10:00:00Z', iconName: 'building' },
+            { id: 'silverman-anderson', name: 'Boletim de Silverman e Anderson', category: 'Neonatalogia', type: 'scale', description: 'Grau de desconforto respiratório em RN.', created_at: '2023-12-07T10:00:00Z', iconName: 'clipboard-list' },
+            { id: 'sofa', name: 'Escala SOFA', category: 'UTI', type: 'scale', description: 'Disfunção orgânica em sepse', created_at: '2023-12-08T10:00:00Z', iconName: 'heart' },
+            { id: 'tinetti', name: 'Escala de Tinetti (POMA)', category: 'Segurança', type: 'scale', description: 'Avalia risco de queda em idosos observando marcha e equilíbrio', created_at: '2023-12-09T10:00:00Z', iconName: 'person-standing' },
+            { id: 'waterlow', name: 'Escala de Waterlow', category: 'Pele', type: 'scale', description: 'Risco de lesão por pressão', created_at: '2023-12-10T10:00:00Z', iconName: 'scale' },
+            { id: 'wood-downes', name: 'Escala Wood e Downes', category: 'Neonatalogia', type: 'scale', description: 'Desconforto respiratório em RN', created_at: '2023-12-11T10:00:00Z', iconName: 'stethoscope' },
+            { id: 'zarit', name: 'Escala de Zarit', category: 'Cuidadores', type: 'scale', description: 'Avaliação do grau de sobrecarga do cuidador familiar', created_at: '2023-12-12T10:00:00Z', iconName: 'user' },
+        ];
+
+        const vaccineToolsData = [
+            { id: 'vacina-prematuro', name: 'Prematuro', category: 'Vacinas', type: 'info', description: 'Calendário vacinal para bebês prematuros.', created_at: '2023-09-01T10:00:00Z', iconName: 'syringe' },
+            { id: 'vacina-criancas', name: 'Crianças (0 a <10 anos)', category: 'Vacinas', type: 'info', description: 'Calendário vacinal infantil.', created_at: '2023-09-02T10:00:00Z', iconName: 'syringe' },
+            { id: 'vacina-adolescentes', name: 'Adolescentes (10 a 19 anos)', category: 'Vacinas', type: 'info', description: 'Calendário vacinal para adolescentes.', created_at: '2023-09-03T10:00:00Z', iconName: 'syringe' },
+            { id: 'vacina-adultos', name: 'Adultos (20 a 59 anos)', category: 'Vacinas', type: 'info', description: 'Calendário vacinal para adultos.', created_at: '2023-09-04T10:00:00Z', iconName: 'syringe' },
+            { id: 'vacina-idosos', name: 'Idosos (mais de 60 anos)', category: 'Vacinas', type: 'info', description: 'Calendário vacinal para idosos.', created_at: '2023-09-05T10:00:00Z', iconName: 'syringe' },
+            { id: 'vacina-gestantes', name: 'Gestantes', category: 'Vacinas', type: 'info', description: 'Calendário vacional para gestantes.', created_at: '2023-09-06T10:00:00Z', iconName: 'syringe' },
+            { id: 'vacina-pacientes-especiais', name: 'Pacientes Especiais', category: 'Vacinas', type: 'info', description: 'Calendário para pacientes com condições especiais.', created_at: '2023-09-07T10:00:00Z', iconName: 'syringe' },
+            { id: 'vacina-ocupacional', name: 'Ocupacional', category: 'Vacinas', type: 'info', description: 'Calendário vacinal para profissionais de saúde', created_at: '2023-09-08T10:00:00Z', iconName: 'syringe' },
+            { id: 'vacina-pneumococicas', name: 'Vacinas Pneumocócicas', category: 'Vacinas', type: 'info', description: 'Calendário para pacientes com condições especiais.', created_at: '2023-09-09T10:00:00Z', iconName: 'syringe' },
+        ];
+
+        const quickAccessLinks = [
+            { id: 'qa-calc', name: 'Calculadoras', iconName: 'calculator', href: '#calculadoras' },
+            { id: 'qa-escalas', name: 'Escalas Clínicas', iconName: 'activity', href: '#escalas' }, // Ícone alterado
+            { id: 'qa-vacinas', name: 'Vacinas', iconName: 'syringe', href: '#vacinas' },
+            { id: 'qa-plano', name: 'Plano de Enfermagem', iconName: 'file-text', href: '#' }, // Simula link
+        ];
+
+        const sortOptions = [
+            { value: 'name-asc', label: 'Nome (A-Z)' },
+            { value: 'name-desc', label: 'Nome (Z-A)' },
+            { value: 'date-desc', label: 'Recentes' },
+            { value: 'date-asc', label: 'Antigos' },
+        ];
+        
+        const allTools = [...TOOLS_DATA, ...vaccineToolsData];
+
+        // --- ESTADO DA APLICAÇÃO ---
+        let state = {
+            inputValue: "",
+            searchTerm: "",
+            viewMode: 'grid', // 'grid' ou 'list'
+            sortCriteria: 'name-asc', // Critério de ordenação
+            showIcons: true,
+        };
+
+        // --- REFERÊNCIAS DO DOM ---
+        const quickAccessContainer = document.getElementById('quick-access-container');
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const clearButton = document.getElementById('clear-button');
+        const controlsContainer = document.getElementById('controls-container');
+        
+        const calculatorsSection = document.getElementById('calculators-section');
+        const scalesSection = document.getElementById('scales-section');
+        const vaccinesSection = document.getElementById('vaccines-section');
+        
+        const calculatorsContainer = document.getElementById('calculators-container');
+        const scalesContainer = document.getElementById('scales-container');
+        const vaccinesContainer = document.getElementById('vaccines-container');
+        
+        const noResultsEl = document.getElementById('no-results');
+
+        // --- FUNÇÕES DE TEMPLATE (Componentes) ---
+
+        // Card para Acesso Rápido
+        function QuickAccessCard(item) {
+            return `
+            <a href="${item.href}" data-anchor-target="${item.href}" class="group quick-access-card">
+                <div class="aspect-square hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-[#1A3E74] overflow-hidden bg-white rounded-2xl">
+                    <div class="p-5 flex flex-col items-center justify-center text-center h-full">
+                        <div class="p-3 bg-[#1A3E74]/10 rounded-lg mb-3">
+                            <i data-lucide="${item.iconName}" class="w-8 h-8 text-[#1A3E74]"></i>
+                        </div>
+                        <p class="text-lg font-bold text-[#1A3E74]">${item.name}</p>
+                    </div>
+                </div>
+            </a>
+            `;
+        }
+
+        // Card de Ferramenta (GRID VIEW)
+        function ToolCard(tool) {
+            let badgeText = 'Escala';
+            let badgeClass = 'bg-blue-50 text-blue-700 border-blue-200';
+            let buttonText = 'Classificar';
+            let buttonIcon = 'calculator';
+
+            if (tool.type === 'calculator') {
+                badgeText = 'Calculadora';
+                badgeClass = 'bg-green-50 text-green-700 border-green-200';
+                buttonText = 'Calcular';
+            } else if (tool.type === 'info') {
+                badgeText = 'Informação';
+                badgeClass = 'bg-purple-50 text-purple-700 border-purple-200';
+                buttonText = 'Consultar';
+                buttonIcon = 'calendar';
+            }
+
+            return `
+            <div class="group tool-card hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-[#1A3E74] overflow-hidden flex flex-col bg-white rounded-2xl" data-tool-id="${tool.id}">
+                <div class="p-5 pb-3">
+                    <div class="flex items-start justify-between mb-2">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${badgeClass}">
+                            ${badgeText}
+                        </span>
+                        ${state.showIcons && tool.iconName ? `
+                        <div class="text-4xl text-[#1A3E74] opacity-50 group-hover:opacity-100 transition-opacity">
+                            <i data-lucide="${tool.iconName}" class="w-8 h-8"></i>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <h3 class="text-lg font-bold text-[#1A3E74] group-hover:text-[#1A3E74] transition-colors flex items-center justify-between">
+                        <span class="flex-1 mr-2 line-clamp-2 min-h-[40px]">${tool.name}</span>
+                    </h3>
+                </div>
+                <div class="p-5 pt-0 flex-grow">
+                    <p class="text-sm text-gray-600 leading-relaxed line-clamp-3 min-h-[60px]">${tool.description}</p>
+                </div>
+                <div class="p-5 pt-0 mt-auto">
+                    <button class="w-full h-[60px] bg-[#1A3E74] text-white rounded-xl font-semibold shadow-sm hover:bg-[#15325e] transition-colors text-lg flex justify-center items-center tool-action-button">
+                        <i data-lucide="${buttonIcon}" class="w-5 h-5 mr-2"></i> ${buttonText}
+                    </button>
+                </div>
+            </div>
+            `;
+        }
+        
+        // Item de Ferramenta (LIST VIEW)
+        function ToolListItem(tool) {
+            let badgeText = 'Escala';
+            let badgeClass = 'bg-blue-100 text-blue-800';
+            let buttonText = 'Classificar';
+            let buttonIcon = 'calculator';
+
+            if (tool.type === 'calculator') {
+                badgeText = 'Calculadora';
+                badgeClass = 'bg-green-100 text-green-800';
+                buttonText = 'Calcular';
+            } else if (tool.type === 'info') {
+                badgeText = 'Informação';
+                badgeClass = 'bg-purple-100 text-purple-800';
+                buttonText = 'Consultar';
+                buttonIcon = 'calendar';
+            }
+
+            return `
+            <div class="tool-list-item hover:shadow-lg transition-shadow duration-300 cursor-pointer bg-white rounded-2xl border" data-tool-id="${tool.id}">
+                <div class="p-4 flex items-center justify-between gap-4">
+                    ${state.showIcons && tool.iconName ? `
+                    <div class="p-3 bg-gray-100 rounded-lg text-[#1A3E74] flex-shrink-0">
+                        <i data-lucide="${tool.iconName}" class="w-6 h-6"></i>
+                    </div>
+                    ` : ''}
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-1 flex-wrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeClass}">
+                                ${badgeText}
+                            </span>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
+                                ${tool.category}
+                            </span>
+                        </div>
+                        <h3 class="text-base font-bold text-[#1A3E74] line-clamp-1">
+                            ${tool.name}
+                        </h3>
+                        <p class="text-sm text-gray-600 line-clamp-1">${tool.description}</p>
+                    </div>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <button title="${buttonText}" class="h-10 px-3 py-1.5 text-sm bg-[#1A3E74] text-white rounded-xl font-semibold shadow-sm hover:bg-[#15325e] transition-colors flex justify-center items-center tool-action-button">
+                            <i data-lucide="${buttonIcon}" class="w-4 h-4 mr-2"></i> ${buttonText}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        // Helper para renderizar o select de ordenação
+        function renderSortSelect() {
+            const optionsHTML = sortOptions.map(opt => 
+                `<option value="${opt.value}" ${state.sortCriteria === opt.value ? 'selected' : ''}>${opt.label}</option>`
+            ).join('');
+
+            return `
+            <div class="flex items-center gap-2">
+                <label for="sort-select" class="text-sm font-medium text-gray-600 hidden sm:block">Classificar</label>
+                <select id="sort-select" class="native-select h-10 text-sm w-full sm:w-40 pl-3 bg-white shadow-sm border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A3E74]">
+                    ${optionsHTML}
+                </select>
+            </div>
+            `;
+        }
+
+        // Helper para renderizar os botões de visualização
+        function renderViewSwitcher() {
+            return `
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium text-gray-600 hidden sm:block">Visualizar</label>
+                    <div class="flex gap-1 bg-gray-100 p-1 rounded-lg">
+                        <button id="view-grid-btn" class="p-1.5 rounded-md ${state.viewMode === 'grid' ? 'bg-white text-[#1A3E74] shadow-sm' : 'text-gray-500 hover:bg-gray-200'}" title="Grelha">
+                            <i data-lucide="layout-grid" class="w-5 h-5 pointer-events-none"></i>
+                        </button>
+                        <button id="view-list-btn" class="p-1.5 rounded-md ${state.viewMode === 'list' ? 'bg-white text-[#1A3E74] shadow-sm' : 'text-gray-500 hover:bg-gray-200'}" title="Lista">
+                            <i data-lucide="list" class="w-5 h-5 pointer-events-none"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 pl-3">
+                    <input 
+                        type="checkbox" 
+                        id="show-icons-toggle"
+                        ${state.showIcons ? 'checked' : ''}
+                        class="w-4 h-4 text-[#1A3E74] rounded border-gray-300 focus:ring-[#1A3E74]"
+                    />
+                    <label for="show-icons-toggle" class="text-sm font-medium text-gray-700 cursor-pointer">
+                        Mostrar Ícones
+                    </label>
+                </div>
+            </div>
+            `;
+        }
+
+        // --- FUNÇÕES DE RENDERIZAÇÃO ---
+
+        function renderQuickAccess() {
+            quickAccessContainer.innerHTML = quickAccessLinks.map(QuickAccessCard).join('');
+        }
+        
+        function renderControls() {
+            controlsContainer.innerHTML = `
+                ${renderSortSelect()}
+                ${renderViewSwitcher()}
+            `;
+        }
+        
+        function renderTools() {
+            // 1. Filtrar
+            const term = state.searchTerm.toLowerCase();
+            const filteredTools = !term ? allTools : allTools.filter(tool =>
+                tool.name.toLowerCase().includes(term) ||
+                tool.category.toLowerCase().includes(term) ||
+                tool.description.toLowerCase().includes(term)
+            );
+
+            // 2. Ordenar
+            const [key, order] = state.sortCriteria.split('-');
+            const sortedTools = [...filteredTools].sort((a, b) => {
+                let compareA, compareB;
+                if (key === 'name') {
+                    compareA = a.name.toLowerCase();
+                    compareB = b.name.toLowerCase();
+                } else { // 'date'
+                    compareA = new Date(a.created_at || 0);
+                    compareB = new Date(b.created_at || 0);
+                }
+                if (compareA < compareB) return order === 'asc' ? -1 : 1;
+                if (compareA > compareB) return order === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            // 3. Categorizar
+            const calculators = sortedTools.filter(t => t.type === 'calculator');
+            const scales = sortedTools.filter(t => t.type === 'scale');
+            const vaccineTools = sortedTools.filter(t => t.type === 'info');
+
+            // 4. Determinar o template (Grid ou Lista)
+            const template = state.viewMode === 'grid' ? ToolCard : ToolListItem;
+            const containerClass = state.viewMode === 'grid' 
+                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8' 
+                : 'space-y-3 mt-8';
+
+            // 5. Renderizar seções
+            calculatorsContainer.className = containerClass;
+            calculatorsContainer.innerHTML = calculators.map(template).join('');
+            calculatorsSection.style.display = calculators.length > 0 ? 'block' : 'none';
+
+            scalesContainer.className = containerClass;
+            scalesContainer.innerHTML = scales.map(template).join('');
+            scalesSection.style.display = scales.length > 0 ? 'block' : 'none';
+
+            vaccinesContainer.className = containerClass;
+            vaccinesContainer.innerHTML = vaccineTools.map(template).join('');
+            vaccinesSection.style.display = vaccineTools.length > 0 ? 'block' : 'none';
+
+            // 6. Mostrar/Ocultar "Nenhum resultado"
+            noResultsEl.style.display = sortedTools.length === 0 ? 'block' : 'none';
+        }
+
+        // Função principal de renderização
+        function mainRender() {
+            // Renderiza os controles estáticos (só precisam de re-renderização quando o estado muda)
+            renderControls();
+            
+            // Renderiza as listas de ferramentas (que dependem de filtro, ordem e visualização)
+            renderTools();
+            
+            // ATIVA OS ÍCONES DO LUCIDE
+            // Isso deve ser chamado toda vez que novos ícones são adicionados ao DOM
+            lucide.createIcons();
+        }
+
+        // --- MANIPULADORES DE EVENTOS ---
+
+        function handleToolClick(toolId) {
+            console.log("Clicou na ferramenta:", toolId);
+            // Aqui você pode adicionar a lógica para abrir um modal, navegar para outra página, etc.
+        }
+
+        function handleSearch() {
+            state.searchTerm = state.inputValue;
+            mainRender();
+        }
+
+        function handleClear() {
+            state.inputValue = "";
+            state.searchTerm = "";
+            searchInput.value = ""; // Limpa o input no DOM
+            mainRender();
+        }
+
+        // --- INICIALIZAÇÃO ---
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Renderiza o Acesso Rápido (só precisa ser feito uma vez)
+            renderQuickAccess();
+            
+            // Renderização inicial dos controles e ferramentas
+            mainRender();
+
+            // --- Listeners de Eventos Estáticos ---
+            searchInput.addEventListener('input', (e) => {
+                state.inputValue = e.target.value;
+            });
+
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+
+            searchButton.addEventListener('click', handleSearch);
+            clearButton.addEventListener('click', handleClear);
+
+            // --- Listeners de Eventos Delegados (para conteúdo dinâmico) ---
+
+            // Listener para os Controles (Ordenação, Visualização, Ícones)
+            controlsContainer.addEventListener('change', (e) => {
+                if (e.target.id === 'sort-select') {
+                    state.sortCriteria = e.target.value;
+                    mainRender();
+                }
+                if (e.target.id === 'show-icons-toggle') {
+                    state.showIcons = e.target.checked;
+                    mainRender();
+                }
+            });
+
+            controlsContainer.addEventListener('click', (e) => {
+                const gridButton = e.target.closest('#view-grid-btn');
+                if (gridButton) {
+                    state.viewMode = 'grid';
+                    mainRender(); // Re-renderiza para aplicar a mudança de estado
+                }
+                const listButton = e.target.closest('#view-list-btn');
+                if (listButton) {
+                    state.viewMode = 'list';
+                    mainRender();
+                }
+            });
+
+            // Listener para os cliques nos Cards de Ferramentas (Grid e Lista)
+            document.getElementById('app').addEventListener('click', (e) => {
+                const toolCard = e.target.closest('.tool-card, .tool-list-item');
+                
+                if (toolCard) {
+                    // Se o clique foi no botão de ação, não propaga para o card pai
+                    if (e.target.closest('.tool-action-button')) {
+                        e.stopPropagation();
+                    }
+                    handleToolClick(toolCard.dataset.toolId);
+                }
+
+                // Listener para o Acesso Rápido (para scroll suave)
+                const quickAccessLink = e.target.closest('.quick-access-card');
+                if (quickAccessLink) {
+                    const anchorTarget = quickAccessLink.dataset.anchorTarget;
+                    if (anchorTarget && anchorTarget.startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = anchorTarget.substring(1);
+                        // Encontra o header H2 correspondente
+                        const targetElement = document.querySelector(`[data-anchor-id="${targetId}"]`);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    } else {
+                        console.log(`Navegar para: ${quickAccessLink.href}`);
+                    }
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
